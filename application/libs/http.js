@@ -39,5 +39,46 @@ module.exports={
         }
 
         return true;
+    },
+    'create_response':function(status,res,method)
+    {
+        //Ok Status codes on success
+        method_ok={}
+        method_ok[this.method.GET]=this.status.HTTP_200_OK;
+        method_ok[this.method.POST]=this.status.HTTP_201_CREATED;
+        method_ok[this.method.PATCH]=this.status.HTTP_202_ACCEPTED;
+        method_ok[this.method.DELETE]=this.status.HTTP_202_ACCEPTED;
+
+        res.setHeader('content-type', 'application/json');
+
+        if(status.isOk())
+        {
+          res.status(method_ok[method]);
+          res.send(status.data);
+        }
+        else if(status.isErr())
+        {
+            if( status.type===status.errorTypes.missing_param ||
+              status.type===status.errorTypes.wrong_param
+            )
+            {
+              res.status(this.status.HTTP_400_BAD_REQUEST);
+            }
+            else
+            {
+              res.status(this.status.HTTP_500_INTERNAL_ERROR);
+            }
+
+            if(status.message)
+            {
+              res.send(status.message);
+            }
+            else
+            {
+                res.send('An Internal error occured');
+            }
+        }
+
+        // res.end()
     }
 };
