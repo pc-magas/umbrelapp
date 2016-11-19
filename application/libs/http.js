@@ -13,5 +13,27 @@ module.exports={
                 'POST':'POST',
                 'PATCH':'PATCH',
                 'DELETE':'DELETE'
-              }
+              },
+    /**
+    * A General method that preprocesses all Http the requests
+    *
+    * @param object request The Http request
+    * @param object response The hettp response
+    * @param object next A way to move to the next handler for this route
+    * @param string route The string for the route
+    *
+    * @return boolean
+    *
+    * It returns false if it you cannot move to the next route
+    */
+    'preprocess':function(request,response,next,route)
+    {
+        if(route && request.originalUrl!=route)
+        {
+          next();
+          return false;
+        }
+
+        return true;
+    }
 };

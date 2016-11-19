@@ -10,28 +10,26 @@ function Favourite(express)
 
   express.use(endpoint,function(req, res)
   {
-    if(req.originalUrl!=endpoint)
+    if(http.preprocess(req,res,next,endpoint))
     {
-        next();
-        return;
+      switch (req.method) {
+        case http.method.GET:
+            self.get(req, res);
+          break;
+        case http.method.POST:
+            self.post(req, res);
+          break;
+        case http.method.PATCH:
+            self.patch(req, res);
+          break;
+        case http.method.DELETE:
+            self.delete(req, res);
+          break;
+        default:
+        self.unsupportedAction(req,res);
+      }
     }
-
-    switch (req.method) {
-      case http.method.GET:
-          self.get(req, res);
-        break;
-      case http.method.POST:
-          self.post(req, res);
-        break;
-      case http.method.PATCH:
-          self.patch(req, res);
-        break;
-      case http.method.DELETE:
-          self.delete(req, res);
-        break;
-      default:
-      self.unsupportedAction(req,res);
-    }
+    return;
   });
 
   /**

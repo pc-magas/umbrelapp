@@ -8,20 +8,17 @@ function Weather(express)
   var self=this;
   var endpoint='/weather';
 
-  express.use(endpoint,function(req, res)
+  express.use(endpoint,function(req, res,next)
   {
-    if(req.originalUrl!=endpoint)
+    if(http.preprocess(req,res,next,endpoint))
     {
-        next();
-        return;
-    }
-
-    switch (req.method) {
-      case http.method.GET:
-          self.get(req, res);
-        break;
-      default:
-      self.unsupportedAction(req,res);
+      switch (req.method) {
+        case http.method.GET:
+            self.get(req, res,next);
+          break;
+        default:
+        self.unsupportedAction(req,res,next);
+      }
     }
   });
 

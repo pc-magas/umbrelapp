@@ -10,19 +10,17 @@ function City(express)
 
   express.use(endpoint,function(req, res,next)
   {
-    if(req.originalUrl!=endpoint)
+    if(http.preprocess(req,res,next,endpoint))
     {
-        next();
-        return;
+      switch (req.method) {
+        case http.method.GET:
+            self.get(req, res,next);
+          break;
+        default:
+        self.unsupportedAction(req,res,next);
+      }
     }
-
-    switch (req.method) {
-      case http.method.GET:
-          self.get(req, res,next);
-        break;
-      default:
-      self.unsupportedAction(req,res,next);
-    }
+    return
   });
 
   /**
