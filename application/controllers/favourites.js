@@ -1,4 +1,4 @@
-var http_status=require('../libs/http_codes.js');
+var http=require('../libs/http.js');
 
 /**
 * @param object express The basic express onject that handles the http request
@@ -11,7 +11,7 @@ function Favourite(express)
   express.use(endpoint,function(req, res)
   {
     switch (req.method) {
-      case 'GET':
+      case http.method.GET:
           self.get(req, res);
         break;
       default:
@@ -38,7 +38,7 @@ function Favourite(express)
   */
   self.unsupportedAction=function(req,res,next)
   {
-    res.status(http_status.HTTP_405_NOT_ALLOWED);
+    res.status(http.status.HTTP_405_NOT_ALLOWED);
     res.send('None shall pass');
   }
 }
