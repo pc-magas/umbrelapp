@@ -6,12 +6,10 @@ var http_status=require('../libs/http_codes.js');
 function Weather(express)
 {
   var self=this;
-  var endpoint='/weather';
+  var endpoint='/city';
 
   express.use(endpoint,function(req, res)
   {
-    console.log(req.method);
-    
     switch (req.method) {
       case 'GET':
           self.get(req, res);

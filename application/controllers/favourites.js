@@ -3,15 +3,13 @@ var http_status=require('../libs/http_codes.js');
 /**
 * @param object express The basic express onject that handles the http request
 */
-function Weather(express)
+function Favourite(express)
 {
   var self=this;
-  var endpoint='/weather';
+  var endpoint='/city/favourites';
 
   express.use(endpoint,function(req, res)
   {
-    console.log(req.method);
-    
     switch (req.method) {
       case 'GET':
           self.get(req, res);
