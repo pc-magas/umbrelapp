@@ -9,7 +9,11 @@ function Weather(express)
   var self=this;
   var endpoint='/weather';
 
-  express.all(endpoint+'?*',function(req, res,next)
+  express.get(endpoint,function(req, res,next)
+  {
+    self.get(req, res,next);
+  })
+  .all(endpoint,function(req, res,next)
   {
     if(http.preprocess(req,res,next,endpoint))
     {
