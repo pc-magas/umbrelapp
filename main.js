@@ -20,7 +20,7 @@ var w=new Weather(app);
 var City=require(path.resolve(cwd,'application/controllers/city.js'));
 var ci=new City(app);
 
-var Favourites=require(path.resolve(cwd,'application/controllers/city.js'));
+var Favourites=require(path.resolve(cwd,'application/controllers/favourites.js'));
 var fa=new Favourites(app)
 
 /**

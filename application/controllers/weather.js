@@ -10,7 +10,11 @@ function Weather(express)
 
   express.use(endpoint,function(req, res)
   {
-    console.log(req.method);
+    if(req.originalUrl!=endpoint)
+    {
+        next();
+        return;
+    }
 
     switch (req.method) {
       case http.method.GET:

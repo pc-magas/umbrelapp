@@ -3,19 +3,25 @@ var http=require('../libs/http.js');
 /**
 * @param object express The basic express onject that handles the http request
 */
-function Weather(express)
+function City(express)
 {
   var self=this;
   var endpoint='/city';
 
-  express.use(endpoint,function(req, res)
+  express.use(endpoint,function(req, res,next)
   {
+    if(req.originalUrl!=endpoint)
+    {
+        next();
+        return;
+    }
+
     switch (req.method) {
       case http.method.GET:
-          self.get(req, res);
+          self.get(req, res,next);
         break;
       default:
-      self.unsupportedAction(req,res);
+      self.unsupportedAction(req,res,next);
     }
   });
 
@@ -27,7 +33,7 @@ function Weather(express)
   */
   self.get=function(req,res,next)
   {
-    res.send("Hello");
+    res.send("Hello City");
   };
 
   /**
@@ -43,4 +49,4 @@ function Weather(express)
   }
 }
 
-module.exports=Weather;
+module.exports=City;

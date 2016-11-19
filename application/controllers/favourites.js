@@ -10,6 +10,12 @@ function Favourite(express)
 
   express.use(endpoint,function(req, res)
   {
+    if(req.originalUrl!=endpoint)
+    {
+        next();
+        return;
+    }
+
     switch (req.method) {
       case http.method.GET:
           self.get(req, res);
@@ -27,7 +33,7 @@ function Favourite(express)
   */
   self.get=function(req,res,next)
   {
-    res.send("Hello");
+    res.send("Hello favourites");
   };
 
   /**
@@ -43,4 +49,4 @@ function Favourite(express)
   }
 }
 
-module.exports=Weather;
+module.exports=Favourite;
