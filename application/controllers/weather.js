@@ -9,21 +9,18 @@ function Weather(express)
   var self=this;
   var endpoint='/weather';
 
-  express.get(endpoint,function(req, res,next)
-  {
-    self.get(req, res,next);
-  })
-  .all(endpoint,function(req, res,next)
+  express.all(endpoint+'?*',function(req, res,next)
   {
     if(http.preprocess(req,res,next,endpoint))
     {
-      // switch (req.method) {
-      //   case http.method.GET:
-      //       self.get(req, res,next);
-      //     break;
-      //   default:
+      switch (req.method) {
+        //Just ot make sure thet get will execute all
+        case http.method.GET:
+            self.get(req, res,next);
+          break;
+        default:
         self.unsupportedAction(req,res,next);
-      // }
+      }
     }
   });
 
