@@ -20,6 +20,15 @@ function Favourite(express)
       case http.method.GET:
           self.get(req, res);
         break;
+      case http.method.POST:
+          self.post(req, res);
+        break;
+      case http.method.PATCH:
+          self.patch(req, res);
+        break;
+      case http.method.DELETE:
+          self.delete(req, res);
+        break;
       default:
       self.unsupportedAction(req,res);
     }
@@ -32,6 +41,39 @@ function Favourite(express)
   * @param next The next express.js http handler
   */
   self.get=function(req,res,next)
+  {
+    res.send("Hello favourites");
+  };
+
+  /**
+  * Handler for http POST method
+  * @param req The http request
+  * @param res The http response
+  * @param next The next express.js http handler
+  */
+  self.post=function(req,res,next)
+  {
+    res.send("Hello favourites");
+  };
+
+  /**
+  * Handler for http PATCH method
+  * @param req The http request
+  * @param res The http response
+  * @param next The next express.js http handler
+  */
+  self.patch=function(req,res,next)
+  {
+    res.send("Hello favourites patch");
+  };
+
+  /**
+  * Handler for http DELETE method
+  * @param req The http request
+  * @param res The http response
+  * @param next The next express.js http handler
+  */
+  self.delete=function(req,res,next)
   {
     res.send("Hello favourites");
   };
