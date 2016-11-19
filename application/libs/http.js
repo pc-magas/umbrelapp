@@ -75,10 +75,9 @@ module.exports={
             }
             else
             {
-                res.send('An Internal error occured');
+              res.send('An Internal error occured');
             }
         }
-
         // res.end()
     }
 };

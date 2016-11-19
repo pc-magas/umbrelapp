@@ -36,6 +36,8 @@ function Weather(express)
   */
   self.get=function(req,res,next)
   {
+    res.set("Connection", "close");
+
     var input_data={};
 
     var has_wanted_parameters=false;
@@ -75,9 +77,9 @@ function Weather(express)
                     function(status)
                     {
                       http.create_response(status,res,req.method);
+                      res.end();
                     });
     }
-
   };
 
   /**
