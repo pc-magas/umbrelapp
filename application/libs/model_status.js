@@ -55,6 +55,7 @@ function ActionStatus()
   */
   self.statusError=function(type)
   {
+    console.log(type);
     if(
         type===self.errorTypes.missing_param ||
         type===self.errorTypes.wrong_param  ||
@@ -64,7 +65,8 @@ function ActionStatus()
           self.error_type=type;
 
       }
-      else {
+      else
+      {
           throw Error('This error type is not supported');
       }
   }
@@ -75,7 +77,7 @@ function ActionStatus()
   */
   self.isErr=function()
   {
-    return status===ERR;
+    return status===ERROR;
   }
 
   /**

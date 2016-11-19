@@ -36,16 +36,48 @@ function Weather(express)
   */
   self.get=function(req,res,next)
   {
-    var model=new WeatherModel();
+    var input_data={};
 
-    model.search({
-                    'from_time':'2016-11-19 24:13:02',
-                  },
-                  function(status)
-                  {
-                    http.create_response(status,res,req.method);
-                  }
-                );
+    var has_wanted_parameters=false;
+    if(req.query.city_id)
+    {
+      input_data['city_id']=req.query.city_id;
+      has_wanted_parameters=true;
+    }
+
+    if(req.query.city_name)
+    {
+      input_data['city_name']=req.query.city_id;
+      has_wanted_parameters=true;
+    }
+
+    if(req.query.from_timestamp)
+    {
+      input_data['from_time']=req.query.from_timestamp;
+      has_wanted_parameters=true;
+    }
+
+    if(req.query.forecast_duration)
+    {
+      input_data['duration']=req.query.forecast_duration;
+      has_wanted_parameters=true;
+    }
+
+    if(!has_wanted_parameters && !Object.keys(req.query).length)
+    {
+      res.status(this.status.HTTP_400_BAD_REQUEST);
+      res.send('The requested parameters you have given are not valid');
+    }
+    else
+    {
+        var model=new WeatherModel();
+        model.search(input_data,
+                    function(status)
+                    {
+                      http.create_response(status,res,req.method);
+                    });
+    }
+
   };
 
   /**
