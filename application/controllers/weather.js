@@ -1,4 +1,5 @@
 var http=require('../libs/http.js');
+var WeatherModel=require('../models/weather.js');
 
 /**
 * @param object express The basic express onject that handles the http request
@@ -8,17 +9,21 @@ function Weather(express)
   var self=this;
   var endpoint='/weather';
 
-  express.use(endpoint,function(req, res,next)
+  express.get(endpoint,function(req, res,next)
+  {
+    self.get(req, res,next);
+  })
+  .all(endpoint,function(req, res,next)
   {
     if(http.preprocess(req,res,next,endpoint))
     {
-      switch (req.method) {
-        case http.method.GET:
-            self.get(req, res,next);
-          break;
-        default:
+      // switch (req.method) {
+      //   case http.method.GET:
+      //       self.get(req, res,next);
+      //     break;
+      //   default:
         self.unsupportedAction(req,res,next);
-      }
+      // }
     }
   });
 
@@ -30,7 +35,16 @@ function Weather(express)
   */
   self.get=function(req,res,next)
   {
-    res.send("Hello");
+    var model=new WeatherModel();
+
+    model.search({
+                    'from_time':'2016-11-19 24:13:02',
+                  },
+                  function(status)
+                  {
+                    http.create_response(status,res,req.method);
+                  }
+                );
   };
 
   /**
