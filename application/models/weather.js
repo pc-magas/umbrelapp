@@ -43,11 +43,7 @@ function Weather()
       //Selecting Duration
       if(params.duration)
       {
-        console.log(parseInt(params.duration));
         var date_end=moment(date.toDate()).add(parseInt(params.duration),'days');
-
-        console.log(date.format('YYYY-MM-DD'),date_end)
-
         query.whereBetween(table+'.date',[date.format('YYYY-MM-DD'),date_end.format('YYYY-MM-DD')])
       }
 
@@ -89,10 +85,12 @@ function Weather()
       }
     }
 
+    query.orderBy(table+'.date','ASC');
+    
     // Returning the data
     query.then(function(data)
     {
-        returnStatus.isOk();
+        returnStatus.statusOK();
         returnStatus.data=data;
         callback(returnStatus);
     });
