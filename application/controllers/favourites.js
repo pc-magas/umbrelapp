@@ -8,7 +8,11 @@ function Favourite(express)
   var self=this;
   var endpoint='/city/favourites';
 
-  express.use(endpoint,function(req, res)
+  express.get(endpoint,function(req,res)
+  {
+    self.get(req, res);    
+  })
+  .all(endpoint,function(req, res)
   {
     if(http.preprocess(req,res,next,endpoint))
     {
