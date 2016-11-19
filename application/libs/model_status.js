@@ -70,6 +70,15 @@ function ActionStatus()
   }
 
   /**
+  * Returns true if this status action is an errorous one
+  * @return boolean
+  */
+  self.isErr=function()
+  {
+    return status===ERR;
+  }
+
+  /**
   * Set the message of the following status
   * @var string
   */
