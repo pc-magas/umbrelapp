@@ -65,20 +65,19 @@ function Weather(express)
       has_wanted_parameters=true;
     }
 
-    if(!has_wanted_parameters && !Object.keys(req.query).length)
+    if(!has_wanted_parameters && Object.keys(req.query).length)
     {
-      res.status(this.status.HTTP_400_BAD_REQUEST);
+      res.status(http.status.HTTP_400_BAD_REQUEST);
       res.send('The requested parameters you have given are not valid');
     }
     else
     {
         var model=new WeatherModel();
-        model.search(input_data,
-                    function(status)
-                    {
-                      http.create_response(status,res,req.method);
-                      res.end();
-                    });
+        model.search(input_data,function(status)
+        {
+          http.create_response(status,res,req.method);
+          res.end();
+        });
     }
   };
 

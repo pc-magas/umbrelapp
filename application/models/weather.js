@@ -26,10 +26,25 @@ function Weather()
   {
     var returnStatus = new ActionStatus();
 
-    query=db.select([table+'.id',table+'.date',table+'.temperature_max',table+'.temperature_min','city.name','city.country'])
+    var query=db.select(db.raw(table+'.date::varchar as date'))
+              .select(table+'.id',table+'.temperature_max',table+'.temperature_min','city.name','city.country')
             .withSchema('public')
             .from(table)
             .join('city',table+'.city_id','city.id')
+
+    /**
+    * Handler in case we want to terminate the database connection and return an error.
+    *
+    * @param status An errorous status case.
+    * @param message A massage in case of error.
+    */
+    var errorHandler=function(message)
+    {
+      returnStatus.statusError(returnStatus.errorTypes.wrong_param);
+      returnStatus.message=message;
+
+      callback(returnStatus);
+    }
 
     if(params.from_time)
     {
@@ -37,12 +52,11 @@ function Weather()
       var date=moment(params.from_time,['YYYY-MM-DD HH:mm:ss','YYYY-MM-DD']);
       if(!date.isValid())
       {
-        returnStatus.statusError(returnStatus.errorTypes.wrong_param);
-        returnStatus.message="The startup datetime you given is not the correct one";
-        callback(returnStatus);
-
+        errorHandler("The startup datetime shoulf be in YYYY-MM-DD or YYYY-MM-DD HH:mm:ss format")
         return;
       }
+
+      console.log(date.format('YYYY-MM-DD'));
 
       //Selecting Duration
       if(params.duration)
@@ -57,11 +71,8 @@ function Weather()
     }
     else if(params.duration) //Duration given only
     {
-
-      returnStatus.statusError(returnStatus.errorTypes.wrong_param);
-      returnStatus.message="For duration you must specify the start date.";
-
-      callback(returnStatus);
+      errorHandler("For duration you must specify the start date.");
+      return
     }
 
     // Searching by City
@@ -69,18 +80,14 @@ function Weather()
     {
       if(params.city_name)
       {
-        returnStatus.statusError(returnStatus.errorTypes.wrong_param);
-        returnStatus.message="Only City id must be given";
-        callback(returnStatus);
+        errorHandler("Only City id must be given");
         return;
       }
       params.city_id=parseInt(params.city_id);
 
       if(isNaN(params.city_id))
       {
-        returnStatus.statusError(returnStatus.errorTypes.wrong_param);
-        returnStatus.message="The City id must be a positive integer";
-        callback(returnStatus);
+        errorHandler("The City id must be a positive integer");
         return;
       }
 
