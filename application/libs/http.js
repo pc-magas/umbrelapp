@@ -1,3 +1,5 @@
+var utils=require('./utils.js');
+
 module.exports={
   'status':{
                   'HTTP_200_OK':200,
@@ -56,10 +58,20 @@ module.exports={
 
         res.setHeader('content-type', 'application/json');
 
+        var sendData={"message":'An Internal error occured'};
+
         if(status.isOk())
         {
-          res.status(method_ok[method]);
-          res.end(JSON.stringify(status.data));      
+          if(!utils.isEmpty(status.data))
+          {
+            res.status(method_ok[method]);
+            sendData=status.data;
+          }
+          else
+          {
+              res.status(this.status.HTTP_404_NOT_FOUND);
+              sendData.message="There are no requested data";
+          }
         }
         else if(status.isErr())
         {
@@ -76,13 +88,10 @@ module.exports={
 
             if(status.message)
             {
-              res.send(status.message);
-            }
-            else
-            {
-              res.send('An Internal error occured');
+              sendData.message=status.message;
             }
         }
-        // res.end()
+
+        res.end(JSON.stringify(sendData));
     }
 };
