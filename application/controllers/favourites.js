@@ -28,10 +28,7 @@ function Favourite(express)
             self.get(req, res, next);
           break;
         case http.method.POST:
-            self.post(req, res, next);
-          break;
-        case http.method.PATCH:
-            self.patch(req, res, next);
+            self.post(req, res, next, user_id);
           break;
         case http.method.DELETE:
             self.delete(req, res, next);
@@ -55,26 +52,32 @@ function Favourite(express)
     res.end("Hello favourites");
   };
 
+  var bodyRequestHandler=function(req,res,callback)
+  {
+    console.log(req.body.city_id);
+    if(Object.keys(req.body).length==1 && req.body.city_id)
+    {
+      callback();
+    }
+    else
+    {
+      res.status(http.status.HTTP_400_BAD_REQUEST);
+      res.send('The requested parameters you have given are not valid');
+    }
+  }
+
   /**
   * Handler for http POST method
   * @param req The http request
   * @param res The http response
   * @param next The next express.js http handler
   */
-  self.post=function(req,res,next)
+  self.post=function(req,res,next,user_id)
   {
-    res.send("Hello favourites");
-  };
-
-  /**
-  * Handler for http PATCH method
-  * @param req The http request
-  * @param res The http response
-  * @param next The next express.js http handler
-  */
-  self.patch=function(req,res,next)
-  {
-    res.send("Hello favourites patch");
+    bodyRequestHandler(req,res,function()
+    {
+      res.send("Hello favourites");
+    });
   };
 
   /**
@@ -85,7 +88,10 @@ function Favourite(express)
   */
   self.delete=function(req,res,next)
   {
-    res.send("Hello favourites");
+    bodyRequestHandler(req,res,function()
+    {
+      res.send("Hello favourites");
+    });
   };
 
   /**
