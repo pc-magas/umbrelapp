@@ -59,7 +59,6 @@ function ActionStatus()
   */
   self.statusError=function(type)
   {
-    console.log(type);
     if(
         type===self.errorTypes.missing_param ||
         type===self.errorTypes.wrong_param  ||
@@ -68,7 +67,6 @@ function ActionStatus()
       ){
           status=ERROR;
           self.error_type=type;
-
       }
       else
       {

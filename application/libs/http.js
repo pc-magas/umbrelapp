@@ -6,6 +6,7 @@ module.exports={
                   'HTTP_201_CREATED':201,
                   'HTTP_202_ACCEPTED':202,
                   'HTTP_400_BAD_REQUEST':400,
+                  'HTTP_403_ACCESS_DENIED':403,
                   'HTTP_404_NOT_FOUND':404,
                   'HTTP_405_NOT_ALLOWED':405,
                   'HTTP_500_INTERNAL_ERROR':500
@@ -32,7 +33,7 @@ module.exports={
     {
         /**
         * Sometimes we want for similar endpoints to have different handler
-        * With that we can mocve to the next handler
+        * With that we can move to the next handler
         */
         if(route && request.originalUrl!=route)
         {
@@ -75,11 +76,16 @@ module.exports={
         }
         else if(status.isErr())
         {
-            if( status.type===status.errorTypes.missing_param ||
-              status.type===status.errorTypes.wrong_param
+            if( status.error_type===status.errorTypes.missing_param ||
+              status.error_type===status.errorTypes.wrong_param
             )
             {
               res.status(this.status.HTTP_400_BAD_REQUEST);
+            }
+            else if(status.error_type===status.errorTypes.access_denied)
+            {
+              console.log("Here");
+              res.status(this.status.HTTP_403_ACCESS_DENIED);
             }
             else
             {
@@ -93,5 +99,50 @@ module.exports={
         }
 
         res.end(JSON.stringify(sendData));
+    },
+    /**
+    * Common execution code when http authentication is required
+    * @param object request The Http request
+    * @param object response The hettp response
+    * @param object next A way to move to the next handler for this route
+    * @param string route The string for the route
+    * @param function callback Function that is executed when all green
+    */
+    'auth_preprocess':function(request,response,next,route,callback)
+    {
+      var self=this;
+
+      var getCredentials=function()
+      {
+        var header=request.headers['authorization']||'',        // get the header
+            token=header.split(/\s+/).pop()||'',            // and the encoded auth token
+            auth=new Buffer(token, 'base64').toString(),    // convert from base64
+            parts=auth.split(/:/),                          // split on colon
+            credentials={'username':parts[0],'password':parts[1]};
+
+            return credentials
+      }
+
+
+      if(self.preprocess(request,response,next,route))
+      {
+        var credentials=getCredentials();
+
+        var User=require('../models/user.js');
+        var user_model=new User();
+
+        user_model.login(credentials.username,credentials.password,function(status)
+        {
+          if(status.isOk())
+          {
+            callback(status.data.id);
+          }
+          else
+          {
+            console.log("Status Outside"+status.error_type);
+            self.create_response(status,response,request.method);
+          }
+        })
+      }
     }
 };

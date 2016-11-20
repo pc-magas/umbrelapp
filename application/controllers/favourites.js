@@ -8,31 +8,39 @@ function Favourite(express)
   var self=this;
   var endpoint='/city/favourites';
 
-  express.get(endpoint,function(req,res)
+  express.get(endpoint,function(req,res,next)
   {
-    self.get(req, res);    
-  })
-  .all(endpoint,function(req, res)
-  {
-    if(http.preprocess(req,res,next,endpoint))
+    http.auth_preprocess(req,res,next,endpoint,
+    function(user_id)
     {
-      switch (req.method) {
+      self.get(req, res, user_id);
+    });
+
+  })
+  .all(endpoint,function(req, res, next)
+  {
+    http.auth_preprocess(req,res,next,endpoint,
+    function(user_id)
+    {
+      switch (req.method)
+      {
         case http.method.GET:
-            self.get(req, res);
+            self.get(req, res, next);
           break;
         case http.method.POST:
-            self.post(req, res);
+            self.post(req, res, next);
           break;
         case http.method.PATCH:
-            self.patch(req, res);
+            self.patch(req, res, next);
           break;
         case http.method.DELETE:
-            self.delete(req, res);
+            self.delete(req, res, next);
           break;
         default:
         self.unsupportedAction(req,res);
       }
-    }
+    });
+
     return;
   });
 
@@ -44,7 +52,7 @@ function Favourite(express)
   */
   self.get=function(req,res,next)
   {
-    res.send("Hello favourites");
+    res.end("Hello favourites");
   };
 
   /**

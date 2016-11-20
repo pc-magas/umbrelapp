@@ -32,28 +32,21 @@ function User()
   */
   self.login=function(username,password,callback)
   {
+    var returnStatus=new ActionStatus();
+
+
     /**
     * Handler in case we want to terminate the database connection and return an error.
     *
     * @param message A massage in case of error.
     * @param status An errorous status case.
     */
-    var errorHandler=function(message,status)
+    var errorHandler=function(message)
     {
-      if(!status)
-      {
-        returnStatus.statusError(returnStatus.errorTypes.wrong_param);
-      }
-      else
-      {
-        returnStatus.statusError(status);
-      }
-      returnStatus.message=message;
-
-      callback(returnStatus);
+        returnStatus.statusError(returnStatus.errorTypes.access_denied);
+        returnStatus.message=message;
+        callback(returnStatus);
     }
-
-    var returnStatus=new ActionStatus();
 
     if(username && password)
     {
@@ -61,11 +54,10 @@ function User()
       {
         if(!data)
         {
-          errorHandler('User does not exist!',returnStatus.errorTypes.access_denied);
+          errorHandler('User does not exist!');
         }
         else
         {
-            console.log('Here');
             if(passwordHash.verify(password,data.password))
             {
               returnStatus.statusOK();
@@ -74,8 +66,7 @@ function User()
             }
             else
             {
-              console.log('Here');
-              errorHandler('Wrong credentials provided!',returnStatus.errorTypes.access_denied);
+              errorHandler('Wrong credentials provided!');
             }
             return;
         }
@@ -83,7 +74,7 @@ function User()
     }
     else
     {
-      errorHandler('No credentials provided!',returnStatus.errorTypes.access_denied);
+      errorHandler('No credentials provided!');
     }
 
     return;
