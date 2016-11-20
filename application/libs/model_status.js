@@ -45,7 +45,11 @@ function ActionStatus()
     /**
     * Error that Indicates an Internal Error
     */
-    'internal':3
+    'internal':3,
+    /**
+    * Error that indicated that this action is unauthorised
+    */
+    'access_denied':4
   }
 
   self.error_type=null
@@ -59,7 +63,8 @@ function ActionStatus()
     if(
         type===self.errorTypes.missing_param ||
         type===self.errorTypes.wrong_param  ||
-        type===self.errorTypes.internal
+        type===self.errorTypes.internal ||
+        type===self.errorTypes.access_denied
       ){
           status=ERROR;
           self.error_type=type;
