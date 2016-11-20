@@ -1,12 +1,15 @@
 var http=require('../libs/http.js');
+var Favourites=require('../models/favourites.js');
 
 /**
 * @param object express The basic express onject that handles the http request
 */
 function Favourite(express)
 {
+
   var self=this;
   var endpoint='/city/favourites';
+  var model= new Favourites();
 
   express.get(endpoint,function(req,res,next)
   {
@@ -57,7 +60,7 @@ function Favourite(express)
     console.log(req.body.city_id);
     if(Object.keys(req.body).length==1 && req.body.city_id)
     {
-      callback();
+      callback(req.body.city_id);
     }
     else
     {
@@ -74,9 +77,12 @@ function Favourite(express)
   */
   self.post=function(req,res,next,user_id)
   {
-    bodyRequestHandler(req,res,function()
+    bodyRequestHandler(req,res,function(city_id)
     {
-      res.send("Hello favourites");
+      model.add(user_id,city_id,function(status)
+      {
+        http.create_response(status,res,req.method);
+      });
     });
   };
 
@@ -90,6 +96,7 @@ function Favourite(express)
   {
     bodyRequestHandler(req,res,function()
     {
+      //TODO: Add Delete Action
       res.send("Hello favourites");
     });
   };
