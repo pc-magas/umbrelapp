@@ -42,6 +42,11 @@ module.exports={
     },
     'create_response':function(status,res,method)
     {
+        if(!method)
+        {
+          method=this.method.GET;
+        }
+
         //Ok Status codes on success
         method_ok={}
         method_ok[this.method.GET]=this.status.HTTP_200_OK;
@@ -54,7 +59,7 @@ module.exports={
         if(status.isOk())
         {
           res.status(method_ok[method]);
-          res.send(status.data);
+          res.end(JSON.stringify(status.data));      
         }
         else if(status.isErr())
         {
