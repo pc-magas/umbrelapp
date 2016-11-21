@@ -28,13 +28,13 @@ function Favourite(express)
       switch (req.method)
       {
         case http.method.GET:
-            self.get(req, res, next);
+            self.get(req, res, next,user_id);
           break;
         case http.method.POST:
             self.post(req, res, next, user_id);
           break;
         case http.method.DELETE:
-            self.delete(req, res, next);
+            self.delete(req, res, next,user_id);
           break;
         default:
         self.unsupportedAction(req,res);
@@ -74,6 +74,7 @@ function Favourite(express)
   * @param req The http request
   * @param res The http response
   * @param next The next express.js http handler
+  * @param numeric user_id The user id for 
   */
   self.post=function(req,res,next,user_id)
   {
@@ -92,12 +93,14 @@ function Favourite(express)
   * @param res The http response
   * @param next The next express.js http handler
   */
-  self.delete=function(req,res,next)
+  self.delete=function(req,res,next,user_id)
   {
-    bodyRequestHandler(req,res,function()
+    bodyRequestHandler(req,res,function(city_id)
     {
-      //TODO: Add Delete Action
-      res.send("Hello favourites");
+      model.delete(user_id,city_id,function(status)
+      {
+        http.create_response(status,res,req.method);
+      });
     });
   };
 
