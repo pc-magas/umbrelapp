@@ -23,7 +23,9 @@ cd ^project_path^
 npm install
 ```
 
-### 2. Database Configuration
+## 2. Database Configuration
+
+### Set database credentials
 
 In order to configure the database connection the following enviromental variables must be exported:
 
@@ -51,3 +53,14 @@ node main.js
  env UMBRELAPP_DB_HOST=^host^ UMBRELAPP_DB_USER=^username^ UMBRELAPP_DB_PASSWD=^password^ UMBRELAPP_DB_NAME=^database_name^ node main.js
 ````
 In both cases you just replace the values in `^` with the apropriate value **without** the `^`.
+
+### Import database schema
+On a GNU/Linux or similar run:
+
+```
+export UMBRELAPP_DB_HOST=^host^
+export UMBRELAPP_DB_USER=^username^
+export UMBRELAPP_DB_PASSWD=^password^
+export UMBRELAPP_DB_NAME=^database_name^
+psql -h${UMBRELAPP_DB_HOST} -U ${UMBRELAPP_DB_USER} -W${UMBRELAPP_DB_PASSWD} -d${UMBRELAPP_DB_NAME} -f schema.sql
+```
