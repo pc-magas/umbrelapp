@@ -8,6 +8,7 @@ Umbrerall is a demo application that allows you to get information about the cur
 ```
 sudo apt-get install postgresql
 ```
+* Node.js 6.9.1
 
 ## How to run
 
