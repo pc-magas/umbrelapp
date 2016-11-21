@@ -50,4 +50,4 @@ node main.js
 ````
  env UMBRELAPP_DB_HOST=^host^ UMBRELAPP_DB_USER=^username^ UMBRELAPP_DB_PASSWD=^password^ UMBRELAPP_DB_NAME=^database_name^ node main.js
 ````
-In this case then you just replace the values in `^` with the apropriate value **without** the `^`.
+In both cases you just replace the values in `^` with the apropriate value **without** the `^`.
