@@ -2,7 +2,7 @@ var http=require('../libs/http.js');
 var Favourites=require('../models/favourites.js');
 
 /**
-* @param object express The basic express onject that handles the http request
+* @param object express The basic express object that handles the http request
 */
 function Favourite(express)
 {
@@ -101,6 +101,14 @@ function Favourite(express)
     }
   };
 
+  /**
+  * A general method that handles http requests
+  * that need an http body
+  *
+  * @param object req The http grquest
+  * @param object res The http response
+  * @param function callback That carries all the logic that http call provides  
+  */
   var bodyRequestHandler=function(req,res,callback)
   {
     console.log(req.body.city_id);
