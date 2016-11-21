@@ -9,6 +9,7 @@ module.exports={
                   'HTTP_403_ACCESS_DENIED':403,
                   'HTTP_404_NOT_FOUND':404,
                   'HTTP_405_NOT_ALLOWED':405,
+                  'HTTP_409_CONFLICT':409,
                   'HTTP_500_INTERNAL_ERROR':500
                 },
     'method':{
@@ -63,15 +64,18 @@ module.exports={
 
         if(status.isOk())
         {
-          if(!utils.isEmpty(status.data))
+          if(method===this.method.GET && utils.isEmpty(status.data))
           {
-            res.status(method_ok[method]);
-            sendData=status.data;
+            res.status(this.status.HTTP_404_NOT_FOUND);
+            sendData.message="There are no requested data";
           }
           else
           {
-              res.status(this.status.HTTP_404_NOT_FOUND);
-              sendData.message="There are no requested data";
+            res.status(method_ok[method]);
+            if(status.data)
+            {
+              sendData=status.data;
+            }
           }
         }
         else if(status.isErr())
@@ -84,18 +88,17 @@ module.exports={
             }
             else if(status.error_type===status.errorTypes.access_denied)
             {
-              console.log("Here");
               res.status(this.status.HTTP_403_ACCESS_DENIED);
             }
             else
             {
               res.status(this.status.HTTP_500_INTERNAL_ERROR);
             }
+        }
 
-            if(status.message)
-            {
-              sendData.message=status.message;
-            }
+        if(!utils.isEmpty(status.message))
+        {
+          sendData.message=status.message;
         }
 
         res.end(JSON.stringify(sendData));

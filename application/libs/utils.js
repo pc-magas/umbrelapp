@@ -7,5 +7,19 @@ module.exports={
   'isEmpty':function(value)
   {
     return !value || (Array.isArray(value) && !value.length) || !Object.keys(value).length
+  },
+  'inObject':function(object,value)
+  {
+      keys=Object.keys(object);
+
+      for (i = 0; i < keys.length; i++)
+      {
+        if(object[keys[i]]===value)
+        {
+          return true;
+        }
+      }
+
+      return false;
   }
 }

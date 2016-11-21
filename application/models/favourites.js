@@ -13,9 +13,17 @@ function Favourites()
   * @param status An errorous status case.
   * @param message A massage in case of error.
   */
-  var errorHandler=function(message,returnStatus,callback)
+  var errorHandler=function(message,returnStatus,callback,statusError)
   {
-    returnStatus.statusError(returnStatus.errorTypes.wrong_param);
+    if(!statusError)
+    {
+      returnStatus.statusError(returnStatus.errorTypes.wrong_param);
+    }
+    else
+    {
+      returnStatus.statusError(statusError);
+    }
+
     returnStatus.message=message;
 
     callback(returnStatus);
@@ -40,9 +48,9 @@ function Favourites()
   {
     var returnStatus=new ActionStatus();
 
-    var addErrorHandler=function(message)
+    var addErrorHandler=function(message,status)
     {
-      errorHandler(message,returnStatus,callback);
+      errorHandler(message,returnStatus,callback,status);
     }
 
     if(!user_id)
@@ -77,9 +85,7 @@ function Favourites()
             }
             else
             {
-                returnStatus.statusOK();
-                returnStatus.message="The entry already exists"
-                callback(returnStatus);
+              addErrorHandler("The entry already exists",returnStatus.errorTypes.conflict);
             }
           });
         }
