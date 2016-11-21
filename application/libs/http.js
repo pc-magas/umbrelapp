@@ -32,12 +32,11 @@ module.exports={
     */
     'preprocess':function(request,response,next,route)
     {
-      console.log(request.originalUrl);
         /**
         * Sometimes we want for similar endpoints to have different handler
         * With that we can move to the next handler
         */
-        if(route && request.originalUrl!=route)
+        if(route && request._parsedUrl.pathname!=route)
         {
           next();
           return false;

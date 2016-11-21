@@ -13,13 +13,11 @@ function Favourite(express)
 
   express.get(endpoint,function(req,res,next)
   {
-    console.log("Here");
     http.auth_preprocess(req,res,next,endpoint,
     function(user_id)
     {
       self.get(req, res,next, user_id);
     });
-
   })
   .all(endpoint,function(req, res, next)
   {
@@ -57,7 +55,7 @@ function Favourite(express)
 
     var has_wanted_params=false;
 
-    var page=null
+    var page=null;//First page as default
     if(req.query.page)
     {
       page=parseInt(req.query.page);
@@ -68,10 +66,11 @@ function Favourite(express)
         return;
       }
       has_wanted_params=true;
+
     }
 
-    var limit=null;
-    if(has_wanted_params && req.query.limit)
+    var limit=10;
+    if(req.query.limit)
     {
       limit=parseInt(req.query.limit);
       if(limit==0)
@@ -80,12 +79,12 @@ function Favourite(express)
         res.end('Limit cannot be 0');
         return;
       }
-    }
-    else if(has_wanted_params)
-    {
-      res.status(http.status.HTTP_400_BAD_REQUEST);
-      res.end('For limit you must provide a page starting from 1');
-      return;
+
+      if(!page)
+      {
+        page=1;
+      }
+      has_wanted_params=true
     }
 
     if(!has_wanted_params && Object.keys(req.query).length)
