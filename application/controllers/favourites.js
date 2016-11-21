@@ -13,10 +13,11 @@ function Favourite(express)
 
   express.get(endpoint,function(req,res,next)
   {
+    console.log("Here");
     http.auth_preprocess(req,res,next,endpoint,
     function(user_id)
     {
-      self.get(req, res, user_id);
+      self.get(req, res,next, user_id);
     });
 
   })
@@ -50,9 +51,55 @@ function Favourite(express)
   * @param res The http response
   * @param next The next express.js http handler
   */
-  self.get=function(req,res,next)
+  self.get=function(req,res,next,user_id)
   {
-    res.end("Hello favourites");
+    res.set("Connection", "close");
+
+    var has_wanted_params=false;
+
+    var page=null
+    if(req.query.page)
+    {
+      page=parseInt(req.query.page);
+      if(page==0)
+      {
+        res.status(http.status.HTTP_400_BAD_REQUEST);
+        res.end('Page starts from 1 and not from 0');
+        return;
+      }
+      has_wanted_params=true;
+    }
+
+    var limit=null;
+    if(has_wanted_params && req.query.limit)
+    {
+      limit=parseInt(req.query.limit);
+      if(limit==0)
+      {
+        res.status(http.status.HTTP_400_BAD_REQUEST);
+        res.end('Limit cannot be 0');
+        return;
+      }
+    }
+    else if(has_wanted_params)
+    {
+      res.status(http.status.HTTP_400_BAD_REQUEST);
+      res.end('For limit you must provide a page starting from 1');
+      return;
+    }
+
+    if(!has_wanted_params && Object.keys(req.query).length)
+    {
+      res.status(http.status.HTTP_400_BAD_REQUEST);
+      res.end('The requested parameters you have given are not valid');
+    }
+    else
+    {
+      model.search(user_id,page,limit,function(status)
+      {
+        http.create_response(status,res,req.method);
+      });
+    }
   };
 
   var bodyRequestHandler=function(req,res,callback)
@@ -74,7 +121,7 @@ function Favourite(express)
   * @param req The http request
   * @param res The http response
   * @param next The next express.js http handler
-  * @param numeric user_id The user id for 
+  * @param numeric user_id The user id for
   */
   self.post=function(req,res,next,user_id)
   {

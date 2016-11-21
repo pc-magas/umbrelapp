@@ -21,5 +21,17 @@ module.exports={
       }
 
       return false;
+  },
+  /**
+  * Calculate the offest by giving page and limit
+  *
+  * @param int page The pade STARTING FROM 1
+  * @param int limit
+  *
+  * @return int;
+  */
+  'offset_calculate':function(page,limit)
+  {
+    return (parseInt(page)-1)*limit;
   }
 }

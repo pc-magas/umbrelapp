@@ -1,6 +1,7 @@
 var db=require('../config/db.js');
 var ActionStatus=require('../libs/model_status.js');
 var City=require('./city.js');
+var utils=require('../libs/utils.js');
 
 function Favourites()
 {
@@ -8,7 +9,7 @@ function Favourites()
   var table='user_favourite_city';
 
   /**
-  * Handler in case we want to terminate the database connection and return an error.
+  * Handler in case we want to return an error.
   *
   * @param status An errorous status case.
   * @param message A massage in case of error.
@@ -44,6 +45,53 @@ function Favourites()
       callback(data);
     });
   }
+
+  /**
+  * Searches all the entries having user_id
+  * and returns all the information regarding the cities
+  */
+  self.search=function(user_id,page,limit,callback)
+  {
+    var returnStatus=new ActionStatus();
+
+    var selectErrorHandler=function(message,status)
+    {
+      errorHandler(message,returnStatus,callback,status);
+    }
+
+    if(!user_id)
+    {
+      selectErrorHandler('No user id specified',returnStatus.errorTypes.access_denied)
+    }
+    else
+    {
+        var query=db.withSchema('public')
+                    .from('city')
+                    .join(table,table+'.city_id','city.id')
+                    .select('city.id','city.name','city.country')
+                    .where(table+'.user_id',user_id)
+                    .orderBy('city.name','ASC').orderBy('city.country','ASC');
+
+        if(!limit)
+        {
+          limit=10;
+        }
+
+        if(page)
+        {
+          page=parseInt(page);
+          limit=parseInt(limit);
+          query.limit(pareInt(limit)).offset(utils.offset_calculate(page,limit));
+        }
+
+        query.then(function(data)
+        {
+            returnStatus.statusOK();
+            returnStatus.data=data;
+            callback(returnStatus);
+        });
+    }
+  };
 
   /**
   * Method that Inserts a new favourite city to the user
