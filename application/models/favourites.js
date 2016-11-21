@@ -33,6 +33,7 @@ function Favourites()
   * Method that searched for an entry and returns it via callback
   * @param numeric user_id
   * @param numeric city_id
+  * @param function callback
   */
   var entry_exists=function(user_id,city_id,callback)
   {
@@ -44,6 +45,12 @@ function Favourites()
     });
   }
 
+  /**
+  * Method that Inserts a new favourite city to the user
+  * @param numeric user_id
+  * @param numeric city_id
+  * @param function callback
+  */
   self.add=function(user_id,city_id,callback)
   {
     var returnStatus=new ActionStatus();
@@ -97,6 +104,52 @@ function Favourites()
     }
   };
 
+  /**
+  * Method that Inserts a new favourite city to the user
+  * @param numeric user_id
+  * @param numeric city_id
+  * @param function callback
+  */
+  self.delete=function(user_id,city_id,callback)
+  {
+    var returnStatus=new ActionStatus();
+
+    var addErrorHandler=function(message,status)
+    {
+      errorHandler(message,returnStatus,callback,status);
+    }
+
+    if(!user_id)
+    {
+      addErrorHandler('No user id specified')
+    }
+    else if(!city_id)
+    {
+      addErrorHandler('No city specified')
+    }
+    else
+    {
+      entry_exists(user_id,city_id,function(data)
+      {
+        if(!data)
+        {
+          addErrorHandler("There it not such a city as favourite",returnStatus.errorTypes.conflict);
+        }
+        else
+        {
+          db(table)
+          .where({'user_id':user_id,'city_id':city_id})
+          .del()
+          .then(function(data)
+          {
+            returnStatus.statusOK();
+            returnStatus.message="The entry sucessfully deleted"
+            callback(returnStatus);
+          });
+        }
+      });
+    }
+  }
 
 }
 
