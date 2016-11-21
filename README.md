@@ -19,7 +19,7 @@ You just do the following steps:
 Just do the following
 
 ```
-cd ^folder_path^
+cd ^project_path^
 npm install
 ```
 
