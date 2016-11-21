@@ -82,7 +82,6 @@ function Favourites()
           page=parseInt(page);
           limit=parseInt(limit);
           var offset=utils.offset_calculate(page,limit);
-          console.log(offset);
           query.limit(limit).offset(offset);
         }
 

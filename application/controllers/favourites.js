@@ -107,11 +107,10 @@ function Favourite(express)
   *
   * @param object req The http grquest
   * @param object res The http response
-  * @param function callback That carries all the logic that http call provides  
+  * @param function callback That carries all the logic that http call provides
   */
   var bodyRequestHandler=function(req,res,callback)
   {
-    console.log(req.body.city_id);
     if(Object.keys(req.body).length==1 && req.body.city_id)
     {
       callback(req.body.city_id);
