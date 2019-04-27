@@ -108,7 +108,7 @@ Any data send or receives will be in `JSON` format. Each http request and respon
 | -------- | :-----------------: | ------ | ------------- |
 | `/weather` | `GET` | Fetches the weather from a specific city | NO |
 | `/city` | `GET` | Fetches the weather oof a specific city | NO |
-| `/city/favourites` | `GET`,`POST`,`DELETE` | Manages the user's favourite cities | Basic Http Authentication for all methods |
+| `/city/favourites` | `GET`,`POST`,`DELETE` | Manages the user's favourite cities | [Basic Http Authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) for all methods |
 
 ### Analytical Description of endpoints
 
@@ -157,7 +157,22 @@ The parameters should be provided in theese sets:
 
 In case of provicing a city with GPS coordinates (longitute and latitude) then the closest city with this name is searched with the requested name.
 
-### `/city/favoutites` endpoint
+### `/city/favoutites` endpoint:
+A [basic http authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) is required.
 
-#### Http `GET`
+#### HTTP `GET`
 
+Retrieves the user's favourite cities. The endpoint needs the following parameters:
+
+| Name | Type | Description | Required |
+| --- | --- | ------- | ---- |
+| `page` | Unsigned Integer | Result Page (used in pagination) | NO |
+| `page_size` | Unsigned Integer | The number of resulrs per page | NO |
+
+#### HTTP `POST`
+
+Adds a city as user's favourite. It needs a compulsory parameter named `city_id` into an `INTEGER` format.
+
+#### HTTP `DELETE`
+
+Removes a city that the user marks favourite before. It needs a compulsory parameter named `city_id` into an `INTEGER` format.
