@@ -1,6 +1,8 @@
 #Umbrelapp Backend
 Umbrerall is a demo application that allows you to get information about the current weather situation.
 
+The api is accessible via `8000` network port.
+
 ## Requirements
 * Postgresql:
     * On Debian/Ubuntu Gnu/Linux distributions just type:
@@ -65,3 +67,32 @@ export UMBRELAPP_DB_PASSWD=^password^
 export UMBRELAPP_DB_NAME=^database_name^
 psql -h${UMBRELAPP_DB_HOST} -U ${UMBRELAPP_DB_USER} -W${UMBRELAPP_DB_PASSWD} -d${UMBRELAPP_DB_NAME} -f schema.sql
 ```
+
+## 3. API documentation
+
+### Common API Stuff
+
+#### Supported Http Methods
+
+| Method | Use  |
+| :------: | ---- |
+| GET | Fetch Data from the database |
+| POST | Insert Data to the database |
+| PATCH | Update data to the database |
+| DELETE | Remove data from the database |
+
+Note:
+Depending the API Call some http methods may not be Supported
+
+### Data format
+Any data send or receives will be in `JSON` format. Each http request and response, should have the following header `Content-type: application/json`.
+
+### HTTP Response Status Codes
+
+| Status Code | Purpoce |
+| :-----------: | ------ |
+| `404 NOT FOUND` | When an Http `GET` request fetches no data |
+| `405 METHOD NOT ALLOWED` | When an endpoind is called on an uknown http method |
+| `403 Forbitten` | When on http basic authentication wrong credentials are used |
+| `400 BAD REQUEST` | When an http request is misformatted for example wrong headers has been provided. | 
+| `500 INTERNAL ERROR` | For eny other type of error |
