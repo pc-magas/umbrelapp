@@ -84,10 +84,10 @@ psql -h${UMBRELAPP_DB_HOST} -U ${UMBRELAPP_DB_USER} -W${UMBRELAPP_DB_PASSWD} -d$
 Note:
 Depending the API Call some http methods may not be Supported
 
-### Data format
+#### Data format
 Any data send or receives will be in `JSON` format. Each http request and response, should have the following header `Content-type: application/json`.
 
-### HTTP Response Status Codes
+#### HTTP Response Status Codes
 
 | Status Code | Purpoce |
 | :-----------: | ------ |
@@ -96,3 +96,46 @@ Any data send or receives will be in `JSON` format. Each http request and respon
 | `403 Forbitten` | When on http basic authentication wrong credentials are used |
 | `400 BAD REQUEST` | When an http request is misformatted for example wrong headers has been provided. | 
 | `500 INTERNAL ERROR` | For eny other type of error |
+| `200 CREATED` | When a new entry has been created |
+| `202 ACCEPTED` | When an entry sucssfully been modified |
+| `200 OK` | For any other non errorous http Call |
+
+## Endpoints
+
+### Summary of endpoints
+
+| Endpoint | Supported methods | Purpoce | Authentication |
+| `/weather` | `GET` | Fetches the weather from a specific city | NO |
+| `/city` | `GET` | Fetches the weather oof a specific city | NO |
+| `/city/favourites` | `GET`,`POST`,`DELETE` | Manages the user's favourite cities | Basic Http Authentication for all methods |
+
+### Analytical Description of endpoints
+
+If any missing infomation is missing bellow refer to the endpoint summary.
+
+#### `/weather` endpoints
+
+##### `GET` method
+
+Fetches the weather from a specific city. This method needs the following parameters:
+
+| Parameter Name | Type | Format | Description | Required |
+| -------------- | ---- | ------ | ----------- | -------- |
+| `city_id` | INTEGER | N/A | The is of a city (database pk) | YES, only when `city_name` is not provided.* |
+| `city_name` | String | nameof the city, country (country can be ommited) | The name of a city and a country | YES, only when `city_id` is not provided.* |
+| `from_timestamp` | DATE | `YYY-MM-DD HH:mm:ss` (as seen in [moment.js](http://momentjs.com/docs/#/parsing/string/) | User's local date and time | NO |
+| `forecast_duration` | INTEGER | N/A | For how many days the forecast will be fetched | NO |
+
+\* Not both `city_id` and `city_name` should be provided, you must provide either `city_id` or `city_name` and should not ommit them. Only one of them must be provided elsewhere an error `400` will be responed.
+
+`Example`: Fetching the weather of Athens from `2019/12/5` to `2019/12/10`:
+ 1. /weather?from_timestamp=2019-12-5 12:24:05&forecast_duration=5&city_name=Athens,Greece
+ 2. /weather?city_id=1222&from_timestamp=2019-12-5 12:24:05&forecast_duration=5
+
+Also requires no Authentication at all.
+
+### `/city` Endpoint
+
+#### `GET` method:
+
+This method requires no authentication and 
