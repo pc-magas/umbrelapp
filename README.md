@@ -105,6 +105,7 @@ Any data send or receives will be in `JSON` format. Each http request and respon
 ### Summary of endpoints
 
 | Endpoint | Supported methods | Purpoce | Authentication |
+| -------- | :-----------------: | ------ | ------------- |
 | `/weather` | `GET` | Fetches the weather from a specific city | NO |
 | `/city` | `GET` | Fetches the weather oof a specific city | NO |
 | `/city/favourites` | `GET`,`POST`,`DELETE` | Manages the user's favourite cities | Basic Http Authentication for all methods |
@@ -138,4 +139,25 @@ Also requires no Authentication at all.
 
 #### `GET` method:
 
-This method requires no authentication and 
+This method requires no authentication and fetches information regarding a city.
+
+| Parameter Name | Type | Format | Description |
+| -------------- | ---- | ------ | ----------- |
+| `id` | INTEGER | N/A | The city id |
+| `name` | String | cityname,country | The name and th country of a city |
+| `long` | FLOAT | N/A | The city's longitiude |
+| `lat` | FLOAT | N/A | The city's latitiude |
+
+The parameters should be provided in theese sets:
+
+* `id`
+* `name`
+* `name`,`long`,`lat`
+* `long`,`lat`
+
+In case of provicing a city with GPS coordinates (longitute and latitude) then the closest city with this name is searched with the requested name.
+
+### `/city/favoutites` endpoint
+
+#### Http `GET`
+
